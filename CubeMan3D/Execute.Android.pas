@@ -14,7 +14,7 @@ unit Execute.Android;
 }
 
 {
-  when exiting application there's a warning abur DetachCurrentThread not called...but don't know where AttachCurrentThread is called :)
+  when exiting application there's a warning about DetachCurrentThread not called...but don't know where AttachCurrentThread is called :)
 }
 
 interface
