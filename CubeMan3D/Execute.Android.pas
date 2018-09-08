@@ -13,6 +13,10 @@ unit Execute.Android;
 
 }
 
+{
+  when exiting application there's a warning abur DetachCurrentThread not called...but don't know where AttachCurrentThread is called :)
+}
+
 interface
 
 uses
@@ -310,17 +314,6 @@ function eglQuerySurface(Display: EGLDisplay; Surface: EGLSurface; Attribute: EG
   external libandroid;
 
 type
-//  Pandroid_app = ^Tandroid_app;
-  TAndroidApplication = class;
-
-  Pandroid_poll_source = ^android_poll_source;
-  android_poll_source = record
-    // The identifier of this source.  May be LOOPER_ID_MAIN or LOOPER_ID_INPUT.
-    id: Int32;
-    // The android_app this ident is associated with.
-    app: TAndroidApplication;
-  end;
-
   TPipeDescriptors = record
     ReadDes : Integer;
     WriteDes: Integer;
@@ -377,7 +370,6 @@ type
     function ProcessMessages: Boolean;
     procedure ProcessCmd;
     procedure ProcessInput;
-    procedure Release;
   end;
 
 implementation
@@ -554,18 +546,6 @@ begin
   end;
 end;
 
-procedure TAndroidApplication.Release;
-begin
-  FreeSavedState();
-  pthread_mutex_lock(mutex);
-  if inputQueue <> nil then
-    AInputQueue_detachLooper(inputQueue);
-  AConfiguration_delete(config);
-  Include(State, Destroyed);
-  pthread_cond_broadcast(cond);
-  pthread_mutex_unlock(mutex);
-end;
-
 // Delphi: init system unit and RTL.
 procedure SystemEntry;
 type
@@ -613,8 +593,6 @@ begin
   { This place would be ideal to call unit finalization, class destructors and so on. }
 //  Halt;
 
-  Release;
-
   Result := nil;
 end;
 
@@ -647,7 +625,15 @@ end;
 
 destructor TAndroidApplication.Destroy;
 begin
-  LOGI('done');
+  LOGI('TAndroidApplication.Destroy');
+  FreeSavedState();
+  pthread_mutex_lock(mutex);
+  if inputQueue <> nil then
+    AInputQueue_detachLooper(inputQueue);
+  AConfiguration_delete(config);
+  Include(State, Destroyed);
+  pthread_cond_broadcast(cond);
+  pthread_mutex_unlock(mutex);
   inherited;
 end;
 
@@ -795,8 +781,11 @@ end;
 
 procedure ANativeActivity_onCreate(activity: PANativeActivity; savedState: Pointer; savedStateSize: size_t); cdecl;
 begin
+  __android_log_write(android_LogPriority.ANDROID_LOG_INFO, 'info', 'ANativeActivity_onCreate');
   if System.DelphiActivity = nil then
   begin
+    __android_log_write(android_LogPriority.ANDROID_LOG_INFO, 'info', 'Create TAndroidApplication');
+
     System.DelphiActivity := activity;
     System.JavaMachine := activity^.vm;
     System.JavaContext := activity^.clazz;
