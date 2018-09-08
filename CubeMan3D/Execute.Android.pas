@@ -548,25 +548,21 @@ end;
 
 // Delphi: init system unit and RTL.
 procedure SystemEntry;
-type
-  TMainFunction = procedure;
 var
-  DlsymPointer: Pointer;
-  EntryPoint: TMainFunction;
-  Lib: NativeUInt;
   Info: dl_info;
+  Lib: NativeUInt;
+  EntryPoint: procedure;
 begin
   if dladdr(NativeUInt(@SystemEntry), Info) <> 0 then
   begin
     Lib := dlopen(Info.dli_fname, RTLD_LAZY);
     if Lib <> 0 then
     begin
-      DlsymPointer := dlsym(Lib, '_NativeMain');
+      @EntryPoint := dlsym(Lib, '_NativeMain');
       dlclose(Lib);
-      if DlsymPointer <> nil then
+      if @EntryPoint <> nil then
       begin
-        EntryPoint := TMainFunction(DlsymPointer);
-        EntryPoint;
+        EntryPoint();
       end;
     end;
   end;
