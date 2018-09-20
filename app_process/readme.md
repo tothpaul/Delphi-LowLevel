@@ -6,6 +6,7 @@ with ADB and app_process it's possible to start a Java (Dalvik) application as a
 + hello.java is a wrapper to libhello.so
 + hello.dpr is the Delphi source code of libhello.so
 + build.cmd can build all this with the following requirements
++ build_dex.cmd is the same but do not use an APK
 
 1. JDK 1.7.0_25 (see SET JDK) - warning ! you can not use version 1.8 or the compilation will fail
 2. Android SDK (see SET SDK) - I use Delphi Tokyo SDK
@@ -79,3 +80,5 @@ Unfortunatly, I did not found a way to put libhello.so inside the APK (move the 
 ```
 09-20 10:29:41.483: E/AndroidRuntime(23450): java.lang.UnsatisfiedLinkError: dalvik.system.PathClassLoader[DexPathList[[zip file "/data/local/tmp/test.apk"],nativeLibraryDirectories=[/vendor/lib, /system/lib]]] couldn't find "libhello.so"
 ```
+
+Since the APK contains only the dex file, build_dex.cmd can be used to send the dex file instead of an APK :)
