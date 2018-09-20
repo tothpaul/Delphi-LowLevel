@@ -5,5 +5,10 @@ begin
   Result := a + b;
 end;
 
+const
+  PREFIX = 'Java_hello_';
+	
+exports 
+  sum name PREFIX + 'sum';
 begin
 end.
