@@ -29,44 +29,53 @@ JAVA to DEX
 >call "C:\Users\Public\Documents\Embarcadero\Studio\19.0\PlatformSDKs\android-sdk-windows\build-tools\22.0.1\dx" --dex --output=.\apk\classes.dex obj 
 Embarcadero Delphi for Android compiler version 32.0
 Copyright (c) 1983,2017 Embarcadero Technologies, Inc.
-Linker command line: C:\Users\Public\Documents\Embarcadero\Studio\19.0\PlatformSDKs\android-ndk-r9c\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\bin\arm-linux-androideabi-ld.exe -o .\\apk\\lib\\armeabi-v7a\\libhello.so --gc-sections --version-script .\\apk\\lib\\armeabi-v7a\\hello.vsr -shared --no-undefined -z noexecstack -z relro -z now -L "C:\\Program Files (x86)\\Embarcadero\\Studio\\19.0\\lib\\Android\\Release" -L C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib -L C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\sources\\cxx-stl\\gnu-libstdc++\\4.8\\libs\\armeabi-v7a C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib\\crtbegin_so.o @.\\apk\\lib\\armeabi-v7a\\hello.lnk -ldl -lc -lm -lrtlhelper -landroid -lcompiler_rt -rpath $ORIGIN C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib\\crtend_so.o
-10 lignes, 0.11 secondes.
+Linker command line: C:\Users\Public\Documents\Embarcadero\Studio\19.0\PlatformSDKs\android-ndk-r9c\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\bin\arm-linux-androideabi-ld.exe -o .\\lib\\libhello.so --gc-sections --version-script .\\lib\\hello.vsr -shared --no-undefined -z noexecstack -z relro -z now -L "C:\\Program Files (x86)\\Embarcadero\\Studio\\19.0\\lib\\Android\\Release" -L C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib -L C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\sources\\cxx-stl\\gnu-libstdc++\\4.8\\libs\\armeabi-v7a C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib\\crtbegin_so.o @.\\lib\\hello.lnk -ldl -lc -lm -lrtlhelper -landroid -lcompiler_rt -rpath $ORIGIN C:\\Users\\Public\\Documents\\Embarcadero\\Studio\\19.0\\PlatformSDKs\\android-ndk-r9c\\platforms\\android-14\\arch-arm\\usr\\lib\\crtend_so.o
+15 lignes, 0.11 secondes.
 DEX to APK
 Processing raw dir 'apk'
-Found 2 asset files in apk
+Found 1 asset file in apk
 Configurations:
  (default)
 
 Files:
-  lib\armeabi-v7a\libhello.so
-    Src: () apk\lib\armeabi-v7a\libhello.so
   classes.dex
     Src: () apk\classes.dex
 
 Resource Dirs:
-Creating 'test.apk'
+Opening 'test.apk'
 Writing all files...
       'classes.dex' (compressed 43%)
-      'lib/armeabi-v7a/libhello.so' (compressed 65%)
-Generated 2 files
+Generated 1 file
 Included 0 files from jar/zip files.
 Checking for deleted files
 Done!
 SEND to ANDROID
-[ 34%] /data/local/tmp/test.apk
-[ 69%] /data/local/tmp/test.apk
 [100%] /data/local/tmp/test.apk
-test.apk: 1 file pushed. 4.1 MB/s (189310 bytes in 0.044s)
-Start Server
-testServer ready
+test.apk: 1 file pushed. 0.2 MB/s (912 bytes in 0.005s)
+[ 12%] /data/local/tmp/libhello.so
+[ 24%] /data/local/tmp/libhello.so
+[ 36%] /data/local/tmp/libhello.so
+[ 48%] /data/local/tmp/libhello.so
+[ 60%] /data/local/tmp/libhello.so
+[ 72%] /data/local/tmp/libhello.so
+[ 84%] /data/local/tmp/libhello.so
+[ 97%] /data/local/tmp/libhello.so
+[100%] /data/local/tmp/libhello.so
+lib\libhello.so: 1 file pushed. 3.6 MB/s (540180 bytes in 0.143s)
+Start application
+ready
+
 ArgCount = 2
 Args[0] = param1
 Args[1] = param2
-Killed 
+WARNING: linker: /data/local/tmp/libhello.so: unused DT entry: type 0xf arg 0xfe0
+1 + 2 = 3
+bye.
+
 "DONE!"
 ```
 
-Unfortunatly, I did not found a way to load the native library libhello.so, that's why the call to hello.sum() kill the application :(
+Unfortunatly, I did not found a way to put libhello.so inside the APK (move the .so file to the APK directory to test)
 ```
 09-20 10:29:41.483: E/AndroidRuntime(23450): java.lang.UnsatisfiedLinkError: dalvik.system.PathClassLoader[DexPathList[[zip file "/data/local/tmp/test.apk"],nativeLibraryDirectories=[/vendor/lib, /system/lib]]] couldn't find "libhello.so"
 ```

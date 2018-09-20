@@ -22,10 +22,9 @@ SET DCC=%BSD%\bin\dccaarm.exe
 SET LNK=%NDK%\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\bin\arm-linux-androideabi-ld.exe
 SET LIB=%BSD%\lib\Android\Release;%NDK%\platforms\android-14\arch-arm\usr\lib;%NDK%\sources\cxx-stl\gnu-libstdc++\4.8\libs\armeabi-v7a
 
-@mkdir apk\lib
-@mkdir apk\lib\armeabi-v7a
-del apk\lib\armeabi-v7a\*.so
-"%DCC%" -$O- --no-config -M -Q -TX.so -E.\apk\lib\armeabi-v7a -U"%BSD%\lib\Android\Release" hello.dpr "--libpath:%LIB%" "--linker:%LNK%" -V -VN 
+@mkdir lib
+del lib\*.so
+"%DCC%" -$O- --no-config -M -Q -TX.so -E.\lib -U"%BSD%\lib\Android\Release" hello.dpr "--libpath:%LIB%" "--linker:%LNK%" -V -VN 
 
 :apk
 @ECHO DEX to APK
@@ -33,8 +32,9 @@ del apk\lib\armeabi-v7a\*.so
 
 @ECHO SEND to ANDROID
 "%ADB%" push test.apk /data/local/tmp/test.apk
+"%ADB%" push lib\libhello.so /data/local/tmp/libhello.so
 
-@ECHO Start Server
-"%ADB%" shell CLASSPATH=/data/local/tmp/test.apk app_process / test param1 param2
+@ECHO Start application
+"%ADB%" shell CLASSPATH=/data/local/tmp/test.apk LD_LIBRARY_PATH=/data/local/tmp app_process / test param1 param2
 
 echo "DONE!"
