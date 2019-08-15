@@ -3,6 +3,10 @@ program hotcorner;
 // Delphi Version by Paul TOTH <contact@execute.fr>
 // based on https://github.com/taviso/hotcorner
 
+// Reduce exe size by 11.264 bytes :)
+{$WEAKLINKRTTI ON}
+{$SETPEFLAGS 1}
+
 // This is a **very** minimal hotcorner app, written in C. Maybe its not the
 // optimal way to do this, but it works for me.
 //
